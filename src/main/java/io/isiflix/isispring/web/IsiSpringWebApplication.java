@@ -1,11 +1,13 @@
 package io.isiflix.isispring.web;
 
+import io.isiflix.isispring.explorer.ClassExplorer;
 import io.isiflix.isispring.util.IsiLogger;
 import org.apache.catalina.Context;
 import org.apache.catalina.connector.Connector;
 import org.apache.catalina.startup.Tomcat;
 
 import java.io.File;
+import java.util.List;
 
 public class IsiSpringWebApplication {
 
@@ -13,7 +15,7 @@ public class IsiSpringWebApplication {
         throw new IllegalStateException("Utility class");
     }
 
-    public static void run() {
+    public static void run(Class<?> sourceClass) {
 
         disableApacheLogging();
 
@@ -33,6 +35,8 @@ public class IsiSpringWebApplication {
             tomcat.start();
             long endTime = System.currentTimeMillis();
             IsiLogger.log("IsiSpringWebApplication", "Tomcat server started in " + ((double) endTime - initTime) / 1000 + " ms.");
+            List<String> allClasses = ClassExplorer.retriveAllClasses(sourceClass);
+            allClasses.forEach(System.out::println);
             tomcat.getServer().await();
         } catch (Exception e) {
             e.printStackTrace();
